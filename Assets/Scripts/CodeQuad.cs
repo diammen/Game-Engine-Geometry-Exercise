@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CodeQuad : MonoBehaviour
 {
+    public int width, height;
+
     private Mesh customMesh;
 
     // Start is called before the first frame update
@@ -14,9 +16,9 @@ public class CodeQuad : MonoBehaviour
         var verts = new Vector3[4];
 
         verts[0] = new Vector3(0, 0, 0);
-        verts[1] = new Vector3(0, 1, 0);
-        verts[2] = new Vector3(1, 0, 0);
-        verts[3] = new Vector3(1, 1, 0);
+        verts[1] = new Vector3(0, height, 0);
+        verts[2] = new Vector3(width, 0, 0);
+        verts[3] = new Vector3(width, height, 0);
         mesh.vertices = verts;
 
         var indices = new int[6];
@@ -41,10 +43,10 @@ public class CodeQuad : MonoBehaviour
 
         var UVs = new Vector2[4];
 
-        UVs[0] = new Vector2(0, 0);
-        UVs[1] = new Vector2(0, 1);
-        UVs[2] = new Vector2(1, 0);
-        UVs[3] = new Vector2(1, 1);
+        UVs[0] = new Vector3(0, 0, 0);
+        UVs[1] = new Vector3(0, height, 0);
+        UVs[2] = new Vector3(width, 0, 0);
+        UVs[3] = new Vector3(width, height, 0);
 
         mesh.uv = UVs;
 
