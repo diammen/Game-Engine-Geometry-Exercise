@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
-    public Transform lookTarget;
+    public Vector3 lookTarget;
     public LayerMask lookTargetMask;
     public float moveSpeed;
     public float rotSpeed;
+    public float lookTurnDuration;
 
     private Animator anim;
     private Rigidbody rb;
     private Vector3 force;
     private Vector3 currentVelocity;
     private float speed;
+    private float distance;
+    private float lookTurnElapsed;
     private bool isColliding;
 
     // Start is called before the first frame update
@@ -45,12 +48,18 @@ public class CharacterController : MonoBehaviour
     {
         if (isColliding)
         {
-            anim.SetLookAtWeight(Mathf.Lerp(0, 1,  ));
-            anim.SetLookAtPosition(lookTarget.position);
+            if (lookTurnElapsed < lookTurnDuration)
+                lookTurnElapsed += Time.deltaTime;
+
+            anim.SetLookAtWeight(Mathf.Lerp(0, 1, (lookTurnElapsed / lookTurnDuration) >= 1 ? 1 : (lookTurnElapsed / lookTurnDuration)));
+            anim.SetLookAtPosition(lookTarget);
         }
         else
         {
-            anim.SetLookAtWeight(Mathf.Lerp(1, 0, 2f));
+            if (lookTurnElapsed > 0)
+                lookTurnElapsed -= Time.deltaTime;
+
+            anim.SetLookAtWeight(Mathf.Lerp(0, 1, (lookTurnElapsed / lookTurnDuration) >= 1 ? 1 : (lookTurnElapsed / lookTurnDuration)));
         }
 
         //anim.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
@@ -64,12 +73,22 @@ public class CharacterController : MonoBehaviour
         if (lookTargetMask == (lookTargetMask | (1 << other.gameObject.layer)))
         {
             isColliding = true;
-            lookTarget = other.gameObject.transform;
+            lookTarget = other.gameObject.transform.position;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (lookTargetMask == (lookTargetMask | (1 << other.gameObject.layer)))
+        {
+            isColliding = true;
+            lookTarget = other.gameObject.transform.position;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         isColliding = false;
+        lookTarget = transform.forward;
     }
 }
