@@ -42,7 +42,7 @@ Material:
     m_Floats:
     - _DarkenInnerLineColor: 0.2
     - _FalloffPower: 1
-    - _Outline: 0.005
+    - _Outline: 0
     - _ShadowContrast: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

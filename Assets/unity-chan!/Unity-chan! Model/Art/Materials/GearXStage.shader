@@ -86,8 +86,6 @@ SubShader
 		ZWrite On
 		ColorMask RGB
 		Blend SrcAlpha OneMinusSrcAlpha
-		//Offset 50,50
-		//Lighting Off
 
 		CGPROGRAM
 			#pragma vertex vert
@@ -220,82 +218,6 @@ SubShader
 		
 		// add inner lines
 		c.rgb = c.rgb * s.InnerLineColor;
-			
-
-		// spec size, 0 => black
-		//c.rgb = half4(1, s.SpecularSize, 1, 1); // 1 = 
-
-		//c.rgb = (testDot, testDot, testDot);
-		//c.rgb = c.rgb * s.InnerLineColor;
-		//NdotL *= 1 - s.ShadowThreshold;// half4(1, 1, 1, 1) - s.ShadowThreshold;
-		/**
-		//NdotL *= s.SpecularSize;
-		half3 dotC = half3(NdotL, NdotL, NdotL);
-		half3 shadowC = half3(1-s.ShadowThreshold, 1-s.ShadowThreshold, 1-s.ShadowThreshold);
-		half3 specSizeC = half3(s.SpecularSize, s.SpecularSize, s.SpecularSize);
-		half3 specSizeCInv  = half3(1-s.SpecularSize, 1-s.SpecularSize, 1-s.SpecularSize);
-		half3 specIncC = half3( s.SpecularIntensity,  s.SpecularIntensity,  s.SpecularIntensity);
-		half3 specIncCInv = half3(1 - s.SpecularIntensity, 1 - s.SpecularIntensity, 1 - s.SpecularIntensity);
-		half3 oneC = half3(1, 1, 1);
-		//half3 finalC = (dotC + specSizeC) * 0.5f ;// *shadowC;
-		half3 finalC = dotC;
-		//finalC = (dotC + shadowC) * 0.5f;
-
-		// intensity: 0:black, 1:noChange, 2:brighter
-		half specInt = (s.SpecularIntensity) * 2;
-		//finalC = (finalC + (specSizeC * specInt)) * 0.5f;
-		//finalC = (finalC + s.SpecularIntensity) * 0.5f;
-		finalC = specSizeCInv;
-		half specSizeInv = 1 - s.SpecularSize;
-		if (specSizeInv > 0.001f)
-		{
-			c.rgb = dotC * (s.SpecularIntensity * 1.5F);// dotC * specSizeCInv; //  NdotL;
-		}
-		else
-		{
-			c.rgb = dotC;// half3(0, 1, 0); //  NdotL;
-		}
-		
-		//c.rgb = dotC *  (diff + c.rgb * spec);
-		//c.rgb = (s.Albedo * _LightColor0.rgb * diff + _LightColor0.rgb * spec) * atten;
-		c.rgb = (s.Albedo *  diff + spec);// *atten;
-		//c.rgb = _LightColor0.rgb;
-		*/
-		//finalC = finalC * specInt; // 0 => black, 1=>no change, 2 => brighter
-		//finalC = oneC - finalC;
-
-		// NOTE: NdotL = light direction. -1 = away, 1 = towards, 0 = 90 deg sideways
-		/*if (NdotL >= 0.99f)
-		{
-			c.rgb = s.ShadowColor;
-		}
-		else
-		{
-			c.rgb = s.BrightColor;
-		}
-		*/
-
-		//c.rgb = dotC;
-
-		// NOTE: atten = shadows
-		//c.rgb = dotC*(atten);
-		//c.rgb = half4(0, s.SpecularSize, 0, 1);
-
-		// Note: spec size is strong in highlights and dark shadows e.g hair / metal => highlight. Always black shadows
-		//c.rgb = half4(0, 1-s.SpecularSize, 0, 1);
-
-		// Note: intensity = color effect, 1 = lighter, 0 = darker, 0.5 = no effect?
-		//c.rgb = half4(0, s.SpecularIntensity, 0, 1);
-		
-		//c.rgb = half4(0, 1-s.ShadowThreshold, 0, 1);
-
-		/*
-		if (NdotL >= 0.99f)
-		{
-			// dark / dark
-			c.rgb = s.ShadowColor * s.ShadowColor;
-		}*/
-		//c.rgb = s.ShadowThreshold;
 
 		return c;
 	}
