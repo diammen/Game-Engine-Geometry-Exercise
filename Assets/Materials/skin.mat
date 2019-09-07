@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: skin
-  m_Shader: {fileID: 4800000, guid: b6ea5ce3150750848836601315f9961c, type: 3}
+  m_Shader: {fileID: 4800000, guid: 8fa058a54948fc64f977800fba3fa750, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -63,6 +63,10 @@ Material:
         m_Texture: {fileID: 2800000, guid: d2bb875dcbca4b8429c01db25d1764bb, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _ShadedTex:
+        m_Texture: {fileID: 2800000, guid: a520877d150f616409dcb1d837e7a2b5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -74,6 +78,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _OutlineThickness: 0.003
     - _Parallax: 0.02
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
@@ -86,3 +91,4 @@ Material:
     - _Emission: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Normal: {r: 0, g: 0, b: 0, a: 1}
+    - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}

@@ -96,15 +96,9 @@ SubShader
 		fixed4 cLight = tex2D(_MainTex, i.tex.xy);
 		fixed4 cSSS = tex2D(_SSSTex, i.tex.xy);
 		fixed4 cDark = cLight * cSSS;
-		//fixed4 cSSS = tex2D(_SSSTex, IN.uv_MainTex);
-		//cDark = half4(1, 0, 0, 1);
-		//cDark = cLight;
-		cDark = cDark *0.5f;// *cDark * cDark;
+		cDark = cDark *0.5f;
 		cDark.a = 1; // weapon had alpha?
-		//return clamp(cDark, 0, 1); // 
 		return cDark;
-		//return cDark;// *cDark; //  cLight * cSSS * cSSS * cSSS; // times cSSS twice = darker outline based on skin color 
-		//return i.color; 
 	}
 
 		ENDCG
@@ -180,16 +174,7 @@ SubShader
 		half4 specColor = half4(s.SpecularIntensity, s.SpecularIntensity, s.SpecularIntensity, 1);
 		half blendArea = 0.04;
 
-		//half3 lerpedColor = smoothstep(s.ShadowColor, s.BrightColor, shadowPercent);// 0.5f);
-		//if (smoothstep(0, 0.025f, NdotL - s.ShadowThreshold))
-		//float _DiffuseTransition = 0.1f;
-		//float diffuseBlend = smoothstep(0.0, 1.0, (NdotL * 0.5) / _DiffuseTransition + 0.5);
-		//NdotL = diffuseBlend;
-		//if (NdotL <= (s.ShadowThreshold)) // 1 - s.ShadowThreshold. flip color e.g black = 0, white = 1 
-		//NdotL = (NdotL - s.ShadowThreshold) * 0.5f;
 		NdotL -= s.ShadowThreshold;
-		//NdotL -= s.ShadowThreshold;
-		//NdotL -= 0.2f;
 		half specStrength = s.SpecularIntensity;// = 0.1f + s.SpecularIntensity;// > 1 = brighter, < 1 = darker
 		if (NdotL < 0) // <= s.ShadowThreshold)
 		{
@@ -225,7 +210,7 @@ SubShader
 	void surf(Input IN, inout SurfaceOutputCustom  o) {
 		// Albedo comes from a texture tinted by color
 		fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-
+		
 		fixed4 cSSS = tex2D(_SSSTex, IN.uv_MainTex);
 		fixed4 cILM = tex2D(_ILMTex, IN.uv_MainTex);
 
@@ -234,22 +219,10 @@ SubShader
 
 		float clampedLineColor = cILM.a;
 		if (clampedLineColor < _DarkenInnerLineColor)
-			clampedLineColor = _DarkenInnerLineColor; 
+			clampedLineColor = _DarkenInnerLineColor;
 
-		// IN.vertexColor = (1, 0, 0, 1);
-
-		//o.ILM = cILM;
 		o.InnerLineColor = half3(clampedLineColor, clampedLineColor, clampedLineColor);
-		//o.ShadowThreshold = (IN.vertexColor.r - 0.5) * _ShadowContrast + 0.5;
-		//##o.ShadowThreshold *= cILM.g;
-		
-		//##o.ShadowThreshold = 1 - o.ShadowThreshold;
-		//o.ShadowThreshold = (IN.vertexColor.r - 0.5) * _ShadowContrast + 0.5;
-		
-		
-		
 			// if vert color not white (ignored)
-			//o.ShadowThreshold = 1 - cILM.g;
 		float vertColor = IN.vertexColor.r;// (IN.vertexColor.r - 0.5) * _ShadowContrast + 0.5; //IN.vertexColor.r;
 			// easier to combine black dark areas 
 			o.ShadowThreshold = cILM.g;
@@ -257,17 +230,8 @@ SubShader
 			o.ShadowThreshold = 1 - o.ShadowThreshold; // flip black / white
 
 
-		o.SpecularIntensity = cILM.r;// 1 + (1 - cILM.r);// +cILM.r;// *2; // make whiter
-		//o.SpecularSize = 1 - cILM.b;// *0.25f);
-		o.SpecularSize =  1-cILM.b;// *0.25f);
-
-		//o.ShadowThreshold = IN.vertexColor.r;
-
-		//cILM.g;// 
-		//o.ShadowThreshold += (1-cILM.g); // gen chanel, black = shadow
-		//o.Albedo = c;
-
-		//o.ShadowThreshold = IN.vertexColor.r
+		o.SpecularIntensity = cILM.r;
+		o.SpecularSize =  1-cILM.b;
 	}
 
 	ENDCG
