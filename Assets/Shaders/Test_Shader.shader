@@ -145,10 +145,6 @@
 			v2f vert(appdata v)
 			{
 				v2f o;
-				// float3 normal = normalize(v.normal);
-				// float3 outlineOffset = normal * _OutlineThickness;
-				// float3 position = v.vertex + outlineOffset;
-				// o.position = UnityObjectToClipPos(position);
 
 				o.position = UnityObjectToClipPos(v.vertex);
 				float3 normA = mul((float3x3)UNITY_MATRIX_IT_MV, v.normal);
