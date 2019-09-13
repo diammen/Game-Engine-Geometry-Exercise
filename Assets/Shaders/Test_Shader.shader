@@ -107,6 +107,9 @@
 		}
 		ENDCG
 
+
+
+		// render outline
 		Pass
 		{
 			Cull Front
@@ -139,7 +142,7 @@
 			{
 				float4 position : SV_POSITION;
 				float4 tex : TEXCOORD0;
-				float4 vColor : COLOR0;
+				fixed4 vColor : COLOR0;
 			};
 
 			v2f vert(appdata v)

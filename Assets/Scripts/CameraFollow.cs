@@ -9,17 +9,23 @@ public class CameraFollow : MonoBehaviour
     public float lookAngle;
     public float rotSpeed;
 
+    Vector3 relativeDistance;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        transform.position = followTarget.position + offset;
+        transform.rotation = Quaternion.Euler(lookAngle, followTarget.eulerAngles.y, 0);
+
+        relativeDistance = transform.position - followTarget.position;
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        offset = Quaternion.AngleAxis(Input.GetAxis("Horizontal") * rotSpeed, Vector3.up) * offset;
-        transform.position = followTarget.position + offset;
-        transform.rotation = Quaternion.Euler(lookAngle, followTarget.eulerAngles.y, 0);
+        transform.position = followTarget.position + relativeDistance;
+        transform.RotateAround(followTarget.position, Vector3.up, Input.GetAxis("Horizontal") * rotSpeed);
+
+        relativeDistance = transform.position - followTarget.position;
     }
 }

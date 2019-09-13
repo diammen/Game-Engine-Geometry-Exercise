@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d456793203a3fae44bc3d2400dec2bf7
+guid: 87f993fe4d9022040811cc1cd8803730
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -139,7 +139,7 @@ ModelImporter:
     400130: mixamorig:Spine1
     400132: mixamorig:Spine2
     400134: //RootNode
-    7400000: Flair
+    7400000: Idle 2
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -161,7 +161,7 @@ ModelImporter:
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -170,10 +170,10 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Flair
+      name: Idle 2
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 60
+      lastFrame: 331
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
