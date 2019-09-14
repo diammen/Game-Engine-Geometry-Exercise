@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public Vector3 lookTarget;
     public LayerMask lookTargetMask;
@@ -12,6 +12,7 @@ public class CharacterController : MonoBehaviour
 
     private Animator anim;
     private Rigidbody rb;
+    [SerializeField]
     private Vector3 force;
     private Vector3 currentVelocity;
     private float speed;
@@ -29,13 +30,29 @@ public class CharacterController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var rotateDir = Quaternion.Euler(0, Input.GetAxis("Horizontal") * rotSpeed, 0);
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            anim.SetTrigger("jump");
+        }
+    }
+    void FixedUpdate()
+    {
+        float x = Input.GetAxis("Horizontal");
+        float y = Input.GetAxis("Vertical");
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            x /= 2;
+            y /= 2;
+        }
+
+        var rotateDir = Quaternion.Euler(0, x * rotSpeed, 0);
         rb.MoveRotation(transform.rotation * rotateDir);
 
-        Vector3 moveDir = new Vector3(0, 0, /*Input.GetAxis("Vertical") < -0.5f ? -0.5f :*/ Input.GetAxis("Vertical")) * (moveSpeed * 100);
+        Vector3 moveDir = new Vector3(0, 0, y) * (moveSpeed * 100);
         currentVelocity = rb.velocity;
 
-        anim.SetFloat("dirX", Input.GetAxis("Horizontal") * (moveSpeed * 100) / (moveSpeed * 100));
+        anim.SetFloat("dirX", x * (moveSpeed * 100) / (moveSpeed * 100));
         anim.SetFloat("dirY", moveDir.z / (moveSpeed * 100));
         anim.SetFloat("speed", moveDir.magnitude / (moveSpeed * 100));
         anim.SetBool("isMovingBack", moveDir.z / (moveSpeed * 100) < 0);

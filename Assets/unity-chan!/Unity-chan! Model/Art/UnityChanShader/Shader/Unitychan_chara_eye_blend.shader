@@ -21,6 +21,23 @@ Shader "UnityChan/Eye - Transparent"
 			"LightMode"="ForwardBase"
 		}
 
+		CGPROGRAM
+		#pragma surface surf Lambert
+
+		sampler2D _MainTex;
+
+		struct Input 
+		{
+			float2 uv_MainTex;
+		};
+		void surf (Input i, inout SurfaceOutput o)
+		{
+			fixed4 col = tex2D(_MainTex, i.uv_MainTex);
+			o.Albedo = col;
+			
+		}
+		ENDCG
+
 		Pass
 		{
 			Cull Back

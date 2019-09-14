@@ -76,7 +76,7 @@
 				}
 			}
 
-			col.rgb *= s.InnerLineColor;
+			col.rgb *= s.InnerLineColor * _LightColor0.rgb;
 
 			return col;
 		}

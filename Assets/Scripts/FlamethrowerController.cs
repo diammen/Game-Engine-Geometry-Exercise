@@ -17,7 +17,7 @@ public class FlamethrowerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetMouseButton(0))
         {
             em.enabled = true;
         }

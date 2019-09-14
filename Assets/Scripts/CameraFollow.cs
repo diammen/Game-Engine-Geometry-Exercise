@@ -5,26 +5,19 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     public Transform followTarget;
-    public Vector3 offset;
+    public float offsetHeight;
     public float lookAngle;
     public float rotSpeed;
+    public float distance;
 
     Vector3 relativeDistance;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        transform.position = followTarget.position + offset;
-        transform.rotation = Quaternion.Euler(lookAngle, followTarget.eulerAngles.y, 0);
-
-        relativeDistance = transform.position - followTarget.position;
-    }
 
     // Update is called once per frame
     void LateUpdate()
     {
-        transform.position = followTarget.position + relativeDistance;
-        transform.RotateAround(followTarget.position, Vector3.up, Input.GetAxis("Horizontal") * rotSpeed);
+        transform.rotation = Quaternion.Lerp(transform.rotation, followTarget.rotation, 1);
+        transform.eulerAngles = new Vector3(lookAngle, transform.eulerAngles.y, transform.eulerAngles.z);
+        transform.position = followTarget.position - (transform.forward * distance) + Vector3.up * offsetHeight;
 
         relativeDistance = transform.position - followTarget.position;
     }
