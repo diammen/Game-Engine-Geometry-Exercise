@@ -7,6 +7,7 @@
 		_MainTex ("Texture", 2D) = "white" {}
 		_ShadedTex ("Shaded Texture", 2D) = "white" {}
 		_CombinedTex ("Combined", 2D) = "white" {}
+		_Offset ("Offset", Vector) = (1,1,1,1)
 	}
 	SubShader
 	{
