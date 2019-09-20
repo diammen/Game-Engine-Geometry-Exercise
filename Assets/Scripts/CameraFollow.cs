@@ -19,6 +19,10 @@ public class CameraFollow : MonoBehaviour
         transform.eulerAngles = new Vector3(lookAngle, transform.eulerAngles.y, transform.eulerAngles.z);
         transform.position = followTarget.position - (transform.forward * distance) + Vector3.up * offsetHeight;
 
+        //transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(followTarget.position - transform.position), 1);
+        //transform.eulerAngles = new Vector3(lookAngle, transform.eulerAngles.y, transform.eulerAngles.z);
+        //transform.position = followTarget.position + offset;
+
         relativeDistance = transform.position - followTarget.position;
     }
 }
