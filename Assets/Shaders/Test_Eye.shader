@@ -1,4 +1,4 @@
-﻿Shader "Custom/Eye" {
+﻿Shader "Custom/Transparent" {
 	Properties
 	{
 		_DarkenInnerLineColor("Darken Inner Line Color", Range(0, 1)) = 0.2

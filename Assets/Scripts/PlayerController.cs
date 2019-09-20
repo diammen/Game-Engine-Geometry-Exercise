@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public Transform shoulderHeight;
     public Vector3 lookTarget;
     public LayerMask lookTargetMask;
     public LayerMask wallMask;
@@ -18,8 +19,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Vector3 force;
     private Vector3 currentVelocity;
-    [SerializeField]
-    private Transform shoulderHeight;
+    private Vector3 rightHandPoint, leftHandPoint;
     private float speed;
     private float distance;
     private float lookTurnElapsed;
@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
         Vector3 moveDir = new Vector3(0, 0, y) * (moveSpeed * 100);
         currentVelocity = rb.velocity;
 
+        // normalize values and set variables in animator to them
         anim.SetFloat("dirX", x * (moveSpeed * 100) / (moveSpeed * 100));
         anim.SetFloat("dirY", moveDir.z / (moveSpeed * 100));
         anim.SetFloat("speed", moveDir.magnitude / (moveSpeed * 100));
@@ -70,69 +71,81 @@ public class PlayerController : MonoBehaviour
 
     private void OnAnimatorIK(int layerIndex)
     {
-        if (isColliding)
+        if (anim)
         {
-            if (lookTurnElapsed < lookTurnDuration)
-                lookTurnElapsed += Time.deltaTime;
+            if (isColliding)
+            {
+                if (lookTurnElapsed < lookTurnDuration)
+                    lookTurnElapsed += Time.deltaTime;
 
-            anim.SetLookAtWeight(Mathf.Lerp(0, 1, (lookTurnElapsed / lookTurnDuration) >= 1 ? 1 : (lookTurnElapsed / lookTurnDuration)));
-            anim.SetLookAtPosition(lookTarget);
+                anim.SetLookAtWeight(Mathf.Lerp(0, 1, (lookTurnElapsed / lookTurnDuration) >= 1 ? 1 : (lookTurnElapsed / lookTurnDuration)));
+                anim.SetLookAtPosition(lookTarget);
+            }
+            else
+            {
+                if (lookTurnElapsed > 0)
+                    lookTurnElapsed -= Time.deltaTime;
 
+                anim.SetLookAtWeight(Mathf.Lerp(0, 1, (lookTurnElapsed / lookTurnDuration) >= 1 ? 1 : (lookTurnElapsed / lookTurnDuration)));
+                anim.SetLookAtPosition(lookTarget);
+            }
+            RaycastHit rightHit;
+            if (Physics.Raycast(shoulderHeight.position, transform.right, out rightHit, handRaycastDistance, wallMask))
+            {
+                if (rightHandTurnElapsed < handTurnDuration)
+                    rightHandTurnElapsed += Time.deltaTime;
 
-        }
-        else
-        {
-            if (lookTurnElapsed > 0)
-                lookTurnElapsed -= Time.deltaTime;
+                // set weight
+                anim.SetIKPositionWeight(AvatarIKGoal.RightHand, (rightHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (rightHandTurnElapsed / handTurnDuration));
+                anim.SetIKRotationWeight(AvatarIKGoal.RightHand, (rightHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (rightHandTurnElapsed / handTurnDuration));
 
-            anim.SetLookAtWeight(Mathf.Lerp(0, 1, (lookTurnElapsed / lookTurnDuration) >= 1 ? 1 : (lookTurnElapsed / lookTurnDuration)));
-        }
-        RaycastHit rightHit;
-        if (Physics.Raycast(shoulderHeight.position, transform.right, out rightHit, handRaycastDistance, wallMask))
-        {
-            if (rightHandTurnElapsed < handTurnDuration)
-                rightHandTurnElapsed += Time.deltaTime;
+                // set position
+                rightHandPoint = rightHit.point;
+                anim.SetIKPosition(AvatarIKGoal.RightHand, rightHandPoint);
+                anim.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(rightHandPoint + Vector3.up - shoulderHeight.position));
+            }
+            else
+            {
+                if (rightHandTurnElapsed > 0)
+                    rightHandTurnElapsed -= Time.deltaTime;
+                if (rightHandTurnElapsed < 0)
+                    rightHandTurnElapsed = 0;
 
-            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, (rightHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (rightHandTurnElapsed / handTurnDuration));
-            anim.SetIKRotationWeight(AvatarIKGoal.RightHand, (rightHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (rightHandTurnElapsed / handTurnDuration));
+                anim.SetIKPositionWeight(AvatarIKGoal.RightHand, (rightHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (rightHandTurnElapsed / handTurnDuration));
+                anim.SetIKRotationWeight(AvatarIKGoal.RightHand, (rightHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (rightHandTurnElapsed / handTurnDuration));
 
-            anim.SetIKPosition(AvatarIKGoal.RightHand, rightHit.point);
-            anim.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(rightHit.point + Vector3.up - shoulderHeight.position));
-        }
-        else
-        {
-            if (rightHandTurnElapsed > 0)
-                rightHandTurnElapsed -= Time.deltaTime;
-            if (rightHandTurnElapsed < 0)
-                rightHandTurnElapsed = 0;
+                anim.SetIKPosition(AvatarIKGoal.RightHand, rightHandPoint);
+                anim.SetIKRotation(AvatarIKGoal.RightHand, Quaternion.LookRotation(rightHandPoint + Vector3.up - shoulderHeight.position));
+            }
 
-            anim.SetIKPositionWeight(AvatarIKGoal.RightHand, (rightHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (rightHandTurnElapsed / handTurnDuration));
-            anim.SetIKRotationWeight(AvatarIKGoal.RightHand, (rightHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (rightHandTurnElapsed / handTurnDuration));
-        }
+            RaycastHit leftHit;
+            if (Physics.Raycast(shoulderHeight.position, -transform.right, out leftHit, handRaycastDistance, wallMask))
+            {
+                if (leftHandTurnElapsed < handTurnDuration)
+                    leftHandTurnElapsed += Time.deltaTime;
 
-        RaycastHit leftHit;
-        if (Physics.Raycast(shoulderHeight.position, -transform.right, out leftHit, handRaycastDistance, wallMask))
-        {
-            if (leftHandTurnElapsed < handTurnDuration)
-                leftHandTurnElapsed += Time.deltaTime;
+                // set weight
+                anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, (leftHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (leftHandTurnElapsed / handTurnDuration));
+                anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, (leftHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (leftHandTurnElapsed / handTurnDuration));
 
-            anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, (leftHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (leftHandTurnElapsed / handTurnDuration));
-            anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, (leftHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (leftHandTurnElapsed / handTurnDuration));
+                // set position
+                leftHandPoint = leftHit.point;
+                anim.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPoint);
+                anim.SetIKRotation(AvatarIKGoal.LeftHand, Quaternion.LookRotation(leftHandPoint + Vector3.up - shoulderHeight.position));
+            }
+            else
+            {
+                if (leftHandTurnElapsed > 0)
+                    leftHandTurnElapsed -= Time.deltaTime;
+                if (leftHandTurnElapsed < 0)
+                    leftHandTurnElapsed = 0;
 
-            anim.SetIKPosition(AvatarIKGoal.LeftHand, leftHit.point);
-            anim.SetIKRotation(AvatarIKGoal.LeftHand, Quaternion.LookRotation(leftHit.point + Vector3.up - shoulderHeight.position));
-        }
-        else
-        {
-            if (leftHandTurnElapsed > 0)
-                leftHandTurnElapsed -= Time.deltaTime;
-            if (leftHandTurnElapsed < 0)
-                leftHandTurnElapsed = 0;
+                anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, (leftHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (leftHandTurnElapsed / handTurnDuration));
+                anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, (leftHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (leftHandTurnElapsed / handTurnDuration));
 
-            anim.SetIKPositionWeight(AvatarIKGoal.LeftHand, (leftHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (leftHandTurnElapsed / handTurnDuration));
-            anim.SetIKRotationWeight(AvatarIKGoal.LeftHand, (leftHandTurnElapsed / handTurnDuration) >= 1 ? 1 : (leftHandTurnElapsed / handTurnDuration));
-            anim.SetIKPosition(AvatarIKGoal.LeftHand, lookTarget);
-            anim.SetIKRotation(AvatarIKGoal.LeftHand, Quaternion.LookRotation(lookTarget + Vector3.up - shoulderHeight.position));
+                anim.SetIKPosition(AvatarIKGoal.LeftHand, leftHandPoint);
+                anim.SetIKRotation(AvatarIKGoal.LeftHand, Quaternion.LookRotation(leftHandPoint + Vector3.up - shoulderHeight.position));
+            }
         }
     }
 
@@ -150,13 +163,11 @@ public class PlayerController : MonoBehaviour
         if (lookTargetMask == (lookTargetMask | (1 << other.gameObject.layer)))
         {
             isColliding = true;
-            lookTarget = other.gameObject.transform.position;
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
         isColliding = false;
-        lookTarget = transform.forward;
     }
 }
