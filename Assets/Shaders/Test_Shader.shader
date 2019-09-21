@@ -1,7 +1,7 @@
 ﻿Shader "Custom/Inverted_Hull" {
 	Properties
 	{
-		_OutlineThickness ("Outline Thickness", Range(0,0.1)) = 0.003
+		_OutlineThickness ("Outline Thickness", Range(0,2)) = 0.003
 		_DarkenInnerLineColor("Darken Inner Line Color", Range(0, 1)) = 0.2
 
 		_MainTex ("Texture", 2D) = "white" {}
